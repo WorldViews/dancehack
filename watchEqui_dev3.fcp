@@ -1,0 +1,15 @@
+itype SPHERICAL
+ttype SPHERICAL
+useTaitByron 1
+#observer aruco
+#c_phi -90
+#viewSize 1284 640
+viewSize 1024 512
+#viewSize 2048 1024
+inclination 0
+serverPort 8000
+#serverPort 80
+#showWindows 0
+#params ceilingCam.txt
+#openDevice 0
+openDevice 3

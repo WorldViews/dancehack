@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Photo sphere with three.js</title>
+	<style>
+		html, body, #sphere { height: 100%; }
+		body { margin: 0; overflow: hidden; background-color: #000; }
+		.tm  { position: absolute; top: 10px; right: 10px; }		
+    </style>	
+</head>
+<body>
+	<div id="sphere"></div>
+
+      <div class="tm">
+         <!--
+	 <img src="http://thematicmapping.org/img/thematicmapping.png" onclick="clickFun(2); return false;">
+	 <br>
+         -->
+	 <button value="Cyl" onclick="setSphere(); return false;">P</button>
+	 <button value="Cyl" onclick="setCirc(); return false;">C</button>
+	 <button value="Cyl" onclick="setEllipse(); return false;">E</button>
+	 <button value="F" onclick="toggleFullScreen(); return false;">F</button>
+	 <br>
+	 <button onclick="setMark(); return false;">M</button>
+	 <button onclick="backToMark(); return false;">&lt;&lt;</button>
+	 <button onclick="setPlayTime(0); return false;">&gt;&gt;</button>
+       <div>
+	 <!--
+	<a href="http://thematicmapping.org/" target="parent" class="tm">
+		<img src="http://thematicmapping.org/img/thematicmapping.png">
+	</a>	
+         -->
+	<script src="js/three.min.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
+	<script src="js/Photosphere.js"></script>	
+	<script src="js/Pano.js"></script>	
+        <script src="js/THREEx.FullScreen.js"></script>
+	<script>
+	  var server = null;
+	  if (!server)
+	      server = window.location.host;
+	  report("***** server: "+server);
+	  //var imgUrl = "http://"+server+"/getImage?camId=viewImage";
+	  var imgUrl = "http://"+server+"/getImage?camId=donlap";
+	  initPano(imgUrl);
+	  //setupDecorations();
+	</script>
+</body>
+</html>
