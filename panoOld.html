@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Photo sphere with three.js</title>
+	<style>
+		html, body, #sphere { height: 100%; }
+		body { margin: 0; overflow: hidden; background-color: #000; }
+		.tm  { position: absolute; top: 10px; right: 10px; }		
+    </style>	
+</head>
+<body>
+	<div id="sphere"></div>
+
+      <div class="tm">
+	 <span id="toggleControls" style="color:white;">controls</span>
+	 <div id="controls" style="display: none;">
+	 <button onclick="setSphere(); return false;">P</button>
+	 <button onclick="setCirc(); return false;">C</button>
+	 <button onclick="setEllipse(); return false;">E</button>
+	 <button onclick="toggleFullScreen(); return false;">F</button>
+	 </div>
+       <div>
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/three.min.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
+	<script src="js/Photosphere.js"></script>	
+	<script src="js/Pano.js"></script>	
+        <script src="js/THREEx.FullScreen.js"></script>
+	<script>
+	  var server = null;
+	  if (!server)
+	      server = window.location.host;
+	  report("server: "+server);
+	  var imgUrl = "http://"+server+"/getImage?camId=viewImage";
+	  //var imgUrl = "http://"+server+"/getImage?camId=donlap";
+	  initPano(imgUrl);
+	</script>
+</body>
+</html>
