@@ -12,20 +12,19 @@
 	<div id="sphere"></div>
 
       <div class="tm">
-         <!--
-	 <img src="http://thematicmapping.org/img/thematicmapping.png" onclick="clickFun(2); return false;">
+	 <span id="toggleControls" style="color:white;">controls</span>
+	 <div id="controls" style="display: none;">
+	 <button onclick="setSphere(); return false;">P</button>
+	 <button onclick="setCirc(); return false;">C</button>
+	 <button onclick="setEllipse(); return false;">E</button>
+	 <button onclick="toggleFullScreen(); return false;">F</button>
 	 <br>
-         -->
-	 <button value="Cyl" onclick="setSphere(); return false;">P</button>
-	 <button value="Cyl" onclick="setCirc(); return false;">C</button>
-	 <button value="Cyl" onclick="setEllipse(); return false;">E</button>
-	 <button value="F" onclick="toggleFullScreen(); return false;">F</button>
+	 <button onclick="setMark(); return false;">Mark</button>
+	 <button onclick="gotoMark(); return false;">|&lt;</button>
+	 <button onclick="setRealTime(); return false;">&gt;|</button>
+	 </div>
        <div>
-	 <!--
-	<a href="http://thematicmapping.org/" target="parent" class="tm">
-		<img src="http://thematicmapping.org/img/thematicmapping.png">
-	</a>	
-         -->
+	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/three.min.js"></script>
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/DeviceOrientationControls.js"></script>
@@ -33,14 +32,24 @@
 	<script src="js/Pano.js"></script>	
         <script src="js/THREEx.FullScreen.js"></script>
 	<script>
+	  //var server = "dvr4:8000";
 	  var server = null;
 	  if (!server)
 	      server = window.location.host;
-	  report("***** server: "+server);
+	  report("server: "+server);
 	  var imgUrl = "http://"+server+"/getImage?camId=viewImage";
-	  //var imgUrl = "http://"+server+"/getImage?camId=donlap";
+	  if (server.startsWith("dvr")) {
+	      report("*** DVR source");
+	      var imgUrl = "http://"+server+"/getImage?camId=platonia";
+	      var t = getParameterByName("t");
+	      if (t != null) {
+	         t = JSON.parse(t);
+	         setMark(t);
+	         setPlayTime(t);
+	      }
+	  }
+	  report("base imgUrl: "+imgUrl);
 	  initPano(imgUrl);
-	  //setupDecorations();
 	</script>
 </body>
 </html>

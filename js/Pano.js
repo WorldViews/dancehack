@@ -24,6 +24,55 @@ var manager = null;
 var textureLoader = null;
 var prevTexture = null;
 var PS = null;
+var fuvs0 = null;
+var playSpeed = 1.0;
+var playTime = null;
+var lastSeekTime = null;
+var lastMark = null;
+
+function setMark(t)
+{
+    if (!t)
+	t = getClockTime(t);
+    report("setMark "+t);
+    lastMark = t;
+}
+
+function gotoMark()
+{
+    var t = lastMark;
+    report("gotoMark t: "+t);
+    setPlayTime(t);
+}
+
+function setRealTime()
+{
+    setPlayTime(null);
+}
+
+function setPlayTime(t)
+{
+    if (t == null) {
+	report("*** set real time ***");
+	playTime = null
+	lastSeekTime = null;
+	return;
+    }
+    if (t < 0)
+	t = getClockTime() - t;
+    playTime = t;
+    lastSeekTime = getClockTime();
+}
+
+function getPlayTime()
+{
+    var t = getClockTime();
+    var dt = t - lastSeekTime;
+    playTime = playTime + playSpeed*dt;
+    lastSeekTime = t;
+    return playTime;
+}
+
 
 THREE.TextureLoader.prototype.crossOrigin = '';
 THREE.ImageUtils.crossOrigin = '';
@@ -106,7 +155,14 @@ function updateImage()
     imNum += 1;
     //PS.controls.autoRotate = false;
     //report("updatingImage...");
-    var url = imageUrl + "&imNumX="+imNum + "&t="+getClockTime();
+    var url;
+    if (playTime == null) {
+	// real time
+	url = imageUrl + "&imNumX="+imNum + "&t="+getClockTime();
+    }
+    else {
+	url = imageUrl + "&t="+getPlayTime();
+    }
     //report("updateImage url: "+url);
 
     textureLoader.load(url, function (texture) {
@@ -182,3 +238,46 @@ function toggleFullScreen()
         THREEx.FullScreen.cancel();
     }
 }
+
+function toggleControls()
+{
+    if ($("#controls").is(":visible") == true) {
+        $("#controls").hide(200);
+    }
+    else {
+        $("#controls").show(200);
+    }
+}
+
+function tweakTex(low, high, mirror)
+{
+    var s = surface;
+    var geo = s.geometry;
+    var fuvs = geo.faceVertexUvs[0];
+    var mat = s.material;
+    var sf = high - low;
+    if (fuvs0 == null) {
+	report("Copying initial UV's");
+        fuvs0 = JSON.parse(JSON.stringify(fuvs));
+	report("done");
+    }
+    var n = 0;
+    for (var i=0; i<fuvs.length; i++) {
+        var f = fuvs[i];
+	var f0 = fuvs0[i];
+	for (var j=0; j<3; j++) {
+	    if (mirror)
+                f[j].x = 1.0 - f0[j].x;
+	    f[j].y = low + sf*f0[j].y;
+	    n++;
+	}
+    }
+    report("updated uv vals: "+n);
+    mat.needsUpdate = true;
+    geo.uvsNeedUpdate = true;
+    geo.buffersNeedUpdate = true;
+}
+
+$(document).ready(function() {
+    $("#toggleControls").click(toggleControls);
+});
