@@ -1,4 +1,6 @@
 *.js~
 *.html~
+*~
+junk/*
 watchEqui_dev1_8000.fcp~
 paramsOut.txt
