@@ -29,6 +29,10 @@ var playSpeed = 1.0;
 var playTime = null;
 var lastSeekTime = null;
 var lastMark = null;
+var container = null;
+var onClickPosition = new THREE.Vector2();
+var mousePos = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
 
 function setMark(t)
 {
@@ -278,6 +282,44 @@ function tweakTex(low, high, mirror)
     geo.buffersNeedUpdate = true;
 }
 
+function onMouseEvent( evt ) {
+    evt.preventDefault();
+    //var container = window;
+    var array = getMousePosition( container, evt.clientX, evt.clientY );
+    onClickPosition.fromArray( array );
+    var intersects = getIntersects( onClickPosition, PS.scene.children );
+    ISECTS = intersects;
+    report("intersects: "+intersects);
+    //if ( intersects.length > 0 && intersects[ 0 ].uv ) {
+    if ( intersects.length > 0) {
+        var point = intersects[0].point;
+        POINT = point;
+        report("point: "+point.x+" "+point.y+" "+point.z);
+	//var uv = intersects[ 0 ].uv;
+	//intersects[ 0 ].object.material.map.transformUv( uv );
+        //report("u: "+uv.x+"  v: "+uv.y);
+	//canvas.setCrossPosition( uv.x, uv.y );
+    }
+}
+
+var getMousePosition = function ( dom, x, y ) {
+    var rect = dom.getBoundingClientRect();
+    return [ ( x - rect.left ) / rect.width, ( y - rect.top ) / rect.height ];
+};
+
+var getIntersects = function ( point, objects ) {
+    mousePos.set( ( point.x * 2 ) - 1, - ( point.y * 2 ) + 1 );
+    report("mousePos: "+mousePos.x+" "+mousePos.y);
+    MPOS = mousePos;
+    raycaster.setFromCamera( mousePos, PS.camera );
+    return raycaster.intersectObjects( objects );
+};
+
+
 $(document).ready(function() {
     $("#toggleControls").click(toggleControls);
+    //window.addEventListener( 'resize', onWindowResize, false );
+    container = document.getElementById('sphere');
+    container.addEventListener( 'mousedown', onMouseEvent, false );
+    //window.addEventListener( 'mousemove', onMouseEvent, false );
 });

@@ -41,7 +41,8 @@ THREE.Photosphere = function (domEl, image, options) {
 		var texture = THREE.ImageUtils.loadTexture(image);
 		texture.minFilter = THREE.LinearFilter;
 	        var material = new THREE.MeshBasicMaterial({
-				map: texture
+			           map: texture,
+			           side: THREE.DoubleSide,
                       		});
 	        sphere = new THREE.Mesh(
 		    //new THREE.SphereGeometry(100, 20, 20),
