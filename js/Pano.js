@@ -33,6 +33,7 @@ var container = null;
 var onClickPosition = new THREE.Vector2();
 var mousePos = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
+var mouseClickFun = null;
 
 function setMark(t)
 {
@@ -292,9 +293,12 @@ function onMouseEvent( evt ) {
     report("intersects: "+intersects);
     //if ( intersects.length > 0 && intersects[ 0 ].uv ) {
     if ( intersects.length > 0) {
-        var point = intersects[0].point;
-        POINT = point;
-        report("point: "+point.x+" "+point.y+" "+point.z);
+	var intersect = intersects[0];
+        var point = intersect.point;
+	var angles = xyzToYawPhiR(point);
+        //report("point: "+point.x+" "+point.y+" "+point.z);
+	if (mouseClickFun)
+	    mouseClickFun(point, angles, intersect);
 	//var uv = intersects[ 0 ].uv;
 	//intersects[ 0 ].object.material.map.transformUv( uv );
         //report("u: "+uv.x+"  v: "+uv.y);
@@ -309,12 +313,41 @@ var getMousePosition = function ( dom, x, y ) {
 
 var getIntersects = function ( point, objects ) {
     mousePos.set( ( point.x * 2 ) - 1, - ( point.y * 2 ) + 1 );
-    report("mousePos: "+mousePos.x+" "+mousePos.y);
+    //report("mousePos: "+mousePos.x+" "+mousePos.y);
     MPOS = mousePos;
     raycaster.setFromCamera( mousePos, PS.camera );
     return raycaster.intersectObjects( objects );
 };
 
+function xyzToYawPhiR(v)
+{
+    // note different conventions about x,y,z.  We want z
+    // to be the up direction.
+    var x = v.x;
+    var z = v.y;
+    var y = v.z;
+    var r = Math.sqrt(x*x + y*y + z*z);
+    var yaw = Math.atan2(y, x);
+    if (r == 0)
+	phi = 0;
+    else
+	phi = Math.acos(z / r);
+    return {r: r, yaw: yaw, phi: phi};
+}
+
+toDegrees = function(r)
+{
+    return r*180/Math.PI;
+}
+
+mouseClickFun = function(pos3, angles, intersect)
+{
+    report("mouseClickFun "+pos3.x+" "+pos3.y+" "+pos3.z);
+    report("yaw: "+angles.yaw+"  phi: "+angles.phi+"  r: "+angles.r);
+    var lat = 90 - toDegrees(angles.phi);
+    var lon = toDegrees(angles.yaw);
+    report("lat: "+lat+"  lon: "+lon);
+}
 
 $(document).ready(function() {
     $("#toggleControls").click(toggleControls);
