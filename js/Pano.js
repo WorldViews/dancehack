@@ -251,7 +251,7 @@ function toggleControls()
 
 function tweakTex(low, high, mirror)
 {
-    var s = surface;
+    var s = PS.surface;
     var geo = s.geometry;
     var fuvs = geo.faceVertexUvs[0];
     var mat = s.material;
