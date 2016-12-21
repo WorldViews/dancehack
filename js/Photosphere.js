@@ -24,7 +24,27 @@ THREE.Photosphere = function (domEl, image, options) {
 		camera.position.y = options.y || 0;
 	        camera.position.y = 200;
 	        camera.position.z = 500;
-	    
+
+	        // for devices with 
+	        devControls = new THREE.DeviceOrientationControls( camera );
+	        // for regular devices
+	        orbControls = new THREE.OrbitControls(camera);
+                orbControls.noPan = true;
+		orbControls.noZoom = true; 
+		orbControls.autoRotate = true;
+		orbControls.autoRotateSpeed = options.speed || 0.5;
+	        orbControls.addEventListener('change', render);
+	        THREE.PhSp.devControls = devControls;
+	        THREE.PhSp.orbControls = orbControls;
+	        THREE.PhSp.controls = orbControls;
+	    //controls = orbControls;
+	        if (options.useGyro)
+		    THREE.PhSp.controls = devControls;
+                else
+		    THREE.PhSp.controls = orbControls;
+                //THREE.PhSp.controls = devControls;
+
+	        /*
                 if (options.useGyro) {
 	            controls = new THREE.DeviceOrientationControls( camera );
 	        }
@@ -36,6 +56,7 @@ THREE.Photosphere = function (domEl, image, options) {
 		    controls.autoRotateSpeed = options.speed || 0.5;
 		    controls.addEventListener('change', render);
                 }
+                */
 		scene = new THREE.Scene();
 
 		var texture = THREE.ImageUtils.loadTexture(image);
@@ -83,7 +104,7 @@ THREE.Photosphere = function (domEl, image, options) {
 	        THREE.PhSp.sphere = sphere;
 	        THREE.PhSp.cyl = cyl;
                 THREE.PhSp.texture = texture;
-	        THREE.PhSp.controls = controls;
+	        //THREE.PhSp.controls = controls;
 	        THREE.PhSp.renderer = renderer;
 		animate();
 	}
@@ -94,7 +115,8 @@ THREE.Photosphere = function (domEl, image, options) {
 
 	function animate () {
 		requestAnimationFrame(animate);
-		controls.update();
+		//controls.update();
+		THREE.PhSp.controls.update();
 	}
 
 	function onMouseWheel (evt) {
