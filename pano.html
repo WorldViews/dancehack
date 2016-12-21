@@ -33,14 +33,38 @@
         <script src="js/THREEx.FullScreen.js"></script>
 	<script>
 	  //var server = "dvr4:8000";
+	  var useGyro = false;
+          /*
+	  if (window.DeviceOrientationEvent) {
+	      report("Browser supports Device Orientaion");
+	      useGyro = true;
+	  }
+	  else {
+	      report("Browser doesn't support Device Orientaion");
+	      useGyro = false;
+	  }
+	  */
+	  var gyro = getParameterByName("gyro");
+	  useGyro = false;
+	  if (gyro) {
+	      report("Using Gyro in device for control");
+	      useGyro = true;
+	  }
 	  var server = null;
 	  if (!server)
 	      server = window.location.host;
 	  report("server: "+server);
-	  var imgUrl = "http://"+server+"/getImage?camId=viewImage";
+	  var camId = "viewImage";
+	  //var imgUrl = "http://"+server+"/getImage?camId=viewImage";
+	  var imgUrl = "http://"+server+"/getImage?camId="+camId;
 	  if (server.startsWith("dvr")) {
 	      report("*** DVR source");
-	      var imgUrl = "http://"+server+"/getImage?camId=platonia";
+	      //var imgUrl = "http://"+server+"/getImage?camId=platonia";
+	      camId="platonia";
+              if (getParameterByName("camId")) {
+	          camId = getParameterByName("camId");
+	      }
+	      var imgUrl = "http://"+server+"/getImage?camId="+camId;
 	      var t = getParameterByName("t");
 	      if (t != null) {
 	         t = JSON.parse(t);
@@ -49,7 +73,7 @@
 	      }
 	  }
 	  report("base imgUrl: "+imgUrl);
-	  initPano(imgUrl);
+	  initPano(imgUrl, useGyro);
 	</script>
 </body>
 </html>
