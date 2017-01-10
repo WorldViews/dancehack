@@ -26,31 +26,28 @@ THREE.Photosphere = function (domEl, image, options) {
 	        camera.position.z = 500;
 
 	        // for devices with 
-	        devControls = new THREE.DeviceOrientationControls( camera );
+	        //devControls = new THREE.DeviceOrientationControls( camera );
 	        // for regular devices
+	        /*
 	        orbControls = new THREE.OrbitControls(camera);
                 orbControls.noPan = true;
 		orbControls.noZoom = true; 
 		orbControls.autoRotate = true;
 		orbControls.autoRotateSpeed = options.speed || 0.5;
 	        orbControls.addEventListener('change', render);
+                */
                 vrControls = new THREE.VRControls( camera );
 	        if ( WEBVR.isAvailable() === false ) {
 		    document.body.appendChild( WEBVR.getMessage() );
 		}
 
-	        THREE.PhSp.devControls = devControls;
-	        THREE.PhSp.orbControls = orbControls;
+	        //THREE.PhSp.devControls = devControls;
+	        //THREE.PhSp.orbControls = orbControls;
 	        THREE.PhSp.vrControls = vrControls;
 	        THREE.PhSp.controls = vrControls;
-	    //controls = orbControls;
-	        if (options.useGyro) {
-		    THREE.PhSp.controls = devControls;
-		}
-                else {
-		    report("Using VR Controls");
-		    THREE.PhSp.controls = vrControls;
-		}
+	        //controls = orbControls;
+	        report("Using VR Controls");
+    	        THREE.PhSp.controls = vrControls;
                 //THREE.PhSp.controls = devControls;
 
 	        /*
@@ -83,12 +80,7 @@ THREE.Photosphere = function (domEl, image, options) {
                 sphere.name = "sphere";
 
 	        cyl = new THREE.Mesh(
-		    //new THREE.SphereGeometry(100, 20, 20),
-		    //new THREE.SphereGeometry(500, 40, 40),
-		    //new THREE.CylinderGeometry(500,500, 500, 40, 40, true),
-		    //new THREE.CylinderGeometry(500,100, 500, 40, 40, true),
 		    new THREE.CylinderGeometry(100, 800, 500, 60, 40, true), //Good
-		    //new THREE.CylinderGeometry(300, 800, 500, 60, 40, true), //Good
 		    material
 		);
 	        //cyl.scale.x = .8;
